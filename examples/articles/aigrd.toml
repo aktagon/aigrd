@@ -1,0 +1,9 @@
+# Example project for `make run-example`: one genre, a failing article and a
+# passing one. Under the fake judge every file fails C-001. The real judge
+# (`aigrd judge`) blocks failing.md on C-001 and C-002 and passes passing.md.
+[judge]
+model = "haiku"
+
+[ARTICLE]
+paths = ["content/articles/**/*.md"]
+rubric = "docs/rubrics/001-article.md"

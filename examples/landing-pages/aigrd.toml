@@ -1,0 +1,15 @@
+# Example project for `make run-example`: a landing page that sells, judged
+# by RUBRIC-001 from Harry Dry's guide. failing.md fails on purpose: the
+# title is a slogan (C-001) and the quote has no name (C-003). passing.md
+# is the same page with both fixed. Under the fake judge every file fails
+# C-001. Sonnet matches the intent on both files; haiku passed passing.md
+# but failed C-004 and three shoulds on failing.md beyond the intended two,
+# measured 2026-09-06. Four should criteria at the default 0.8 would block
+# on one miss; 0.75 lets one miss warn.
+[judge]
+model = "sonnet"
+
+[LANDING]
+paths = ["content/landing/**/*.md"]
+rubric = "docs/rubrics/001-landing.md"
+threshold = 0.75

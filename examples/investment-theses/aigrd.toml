@@ -1,0 +1,17 @@
+# Example project for `make run-example`: a two-minute investment thesis,
+# judged by RUBRIC-001 from Michael Steinhardt's brief to his intern in "No
+# Bull" and the house thesis validator. failing.md fails on purpose: its
+# variant perception restates the consensus (C-003) and its trigger is "the
+# market will come around" (C-005). passing.md is the same idea with both
+# fixed. On haiku with thinking capped at 0, failing.md also warns C-009 on
+# a span that changes by run; sonnet passes it. Under the fake judge every
+# file fails C-001. Six musts and three
+# shoulds: at 0.75 any should miss blocks, since floor(3 x 0.25) is 0, so the
+# genre sets 0.66, which lets one miss warn and two block.
+[judge]
+model = "haiku"
+
+[THESIS]
+paths = ["content/investment-theses/**/*.md"]
+rubric = "docs/rubrics/001-thesis.md"
+threshold = 0.66
