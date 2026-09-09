@@ -92,6 +92,7 @@ A genre in `aigrd.toml` maps paths to a rubric:
     [judge]
     model = "haiku"            # a CLI alias or model id, passed to claude --model
     max_thinking_tokens = 0    # extended thinking in the judge; 0 is off
+    on_unavailable = "error"   # a judge that ran and failed: "error" or "warn"
 
     [POST]
     paths = ["content/posts/**/*.md"]
@@ -107,6 +108,11 @@ code, and the measured cost per call.
 the files git reports as modified or untracked. When a file has errors it
 prints a block decision. The reason lists each failed criterion, its
 evidence, its fix and the attempt count. On a pass it prints nothing.
+
+A `judge.failed` file blocks on the same terms and takes an attempt, so
+`max_attempts` bounds it. Three stops name the cause, then the turn
+completes. The agent usually cannot fix a broken judge, so the bound
+matters.
 
 `aigrd hooks claude` prints the `settings.json` entry with an explicit
 timeout and reports whether it is wired. It never writes settings.
@@ -163,6 +169,11 @@ on the verdicts you overruled turn "the judge seems harsh" into a number.
 `0` clean, `1` at least one error diagnostic, `2` config error or misuse.
 Harness mode always exits `0`; the block rides the stdout object.
 `--format json` prints one `{exit_code, diagnostics, summary}` object.
+
+A judge that ran and returned no usable verdict is `judge.failed`, an
+error. It exits `1`, so a broken judge fails your build rather than
+passing it. `[judge].on_unavailable = "warn"` downgrades it to a warning.
+`judge.unavailable` is separate: `claude` is not on `PATH`.
 
 ## Changelog and licence
 

@@ -6,6 +6,41 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-09
+
+**Upgrade note.** aigrd can now fail where 0.1.0 passed. A misconfigured
+judge exits `1` instead of warning. Fix the judge, or set
+`on_unavailable = "warn"` under `[judge]` to keep the old behaviour.
+
+### Changed
+
+- A judge that could not run no longer reports a pass. A `claude` that ran
+  and returned no usable verdict is now `judge.failed`, an error. It exits
+  `1` and blocks the Claude Code turn. Version 0.1.0 warned and exited `0`,
+  so a broken judge passed every file it was meant to check.
+- `judge.failed` covers a crash, a timeout, spending past
+  `max_budget_usd`, an `is_error` result, and a verdict outside the
+  schema. A file aigrd cannot read joins it.
+- `judge.unavailable` now means one thing: `claude` is not on `PATH`. It
+  stays a warning and never blocks.
+- A `judge.failed` file takes an attempt, so `[judge].max_attempts` bounds
+  it. Three stops name the cause, then `judge.gave-up` releases the turn.
+  A broken judge cannot trap the agent.
+
+### Added
+
+- `[judge].on_unavailable`, either `"error"` (the default) or `"warn"`.
+  `"warn"` restores the 0.1.0 soft skip. Any other value is `cfg.invalid`
+  and exits `2`.
+
+### Fixed
+
+- `aigrd init` and `aigrd docs` gave no range for `max_thinking_tokens`.
+  The `claude` command-line tool accepts every value and raises a cap below
+  1024 to 1024. Extended thinking is billed as output and spends against
+  `max_budget_usd`, so a higher cap can exhaust the budget and lose the
+  verdict. Both documents now say so.
+
 ## [0.1.0] - 2026-09-07
 
 ### Added
