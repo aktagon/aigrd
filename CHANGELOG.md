@@ -6,6 +6,39 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-09-28
+
+**Upgrade note.** `aigrd agreement` now counts runs, not labels. A script
+that divided `agreements` by `labels` must divide by `samples`.
+
+### Added
+
+- `aigrd judge --repeat N` judges each file N times and passes it only when
+  every run passes. It reports how many runs failed each criterion, for
+  example `C-008 failed 2 of 3`. A run that returns no verdict counts as a
+  failed run. With N above 1 the verdict cache is neither read nor written,
+  and each call costs a full judge call. `--format json` gains a `repeat`
+  key, and each run-log line of a repeat carries `repeat: {run, of}`.
+  Without the flag, or with `--repeat 1`, output is unchanged.
+- `--repeat` takes 1 to 10. A value of 0, above 10, or a non-number exits
+  `2`. So does `--repeat` above 1 with `--harness`, and `--repeat` with any
+  command other than `judge`.
+
+### Changed
+
+- `aigrd agreement` counts every judge verdict for a label's text as a
+  sample, from a `--repeat` batch or a separate run. It used to read only
+  the most recent verdict. Cache hits are not samples. Text rows now read
+  `agreed in 7 of 9 runs`.
+- In `aigrd agreement --format json`, `agreements`,
+  `judge_fails_owner_passes` and `judge_passes_owner_fails` now count
+  samples, not labels. `labels` and `unmatched` still count labels. Two keys
+  are new: `samples` and `unmatched_samples`. A script that divided
+  `agreements` by `labels` must divide by `samples` instead.
+- After a criterion's statement is edited, verdicts judged against the old
+  statement still count for its labels. Verdicts on the new statement are
+  unmatched samples.
+
 ## [0.2.0] - 2026-09-09
 
 **Upgrade note.** aigrd can now fail where 0.1.0 passed. A misconfigured

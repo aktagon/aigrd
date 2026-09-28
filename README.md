@@ -6,7 +6,8 @@ Each criterion gets a pass or fail, a quoted span as evidence, and a fix
 note.
 
 Below the bar, the Claude Code Stop hook blocks the turn, and the agent
-redoes the work. aigrd judges once per call. The harness owns the loop.
+redoes the work. aigrd judges once per call, or a fixed N times
+with `--repeat`. The harness owns the loop.
 
 aigrd is the agent-output member of the `*grd` family of single-binary
 guards. Each guards a different source of truth with the same command
@@ -49,7 +50,7 @@ command-line tool, logged in.
 Asset names embed the version, so set it once and copy the rest.
 
 ```sh
-VERSION=v0.1.0
+VERSION=v0.3.0
 TARGET=aarch64-apple-darwin         # macOS Apple Silicon
 # TARGET=x86_64-apple-darwin        # macOS Intel
 # TARGET=x86_64-unknown-linux-gnu   # Linux x86_64
@@ -158,6 +159,11 @@ pieces.
 
 Every judged file appends one line to `.aigrd/runs.jsonl`: model, thinking
 cap, source, cost, duration and verdict. `aigrd runs` summarises the log.
+
+The judge can return different verdicts on unchanged text. `aigrd judge
+--repeat 3` judges each file 3 times, passes it only when every run passes,
+and reports how many runs failed each criterion. `aigrd agreement` counts
+every run as a sample.
 
 `aigrd label FILE C-001 pass` records your own verdict as a portable
 evaluation case beside the rubric. `aigrd agreement` compares your labels
