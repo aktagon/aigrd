@@ -50,7 +50,7 @@ command-line tool, logged in.
 Asset names embed the version, so set it once and copy the rest.
 
 ```sh
-VERSION=v0.3.0
+VERSION=v0.3.1
 TARGET=aarch64-apple-darwin         # macOS Apple Silicon
 # TARGET=x86_64-apple-darwin        # macOS Intel
 # TARGET=x86_64-unknown-linux-gnu   # Linux x86_64

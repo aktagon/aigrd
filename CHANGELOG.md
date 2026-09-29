@@ -6,6 +6,14 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-09-29
+
+### Fixed
+
+- Inside a judge turn (`AIGRD_JUDGE` set), harness mode exited without
+  reading the Stop payload. The caller's write to stdin could then fail
+  with a broken pipe. aigrd now reads the payload before the guard exits.
+
 ## [0.3.0] - 2026-09-28
 
 **Upgrade note.** `aigrd agreement` now counts runs, not labels. A script
