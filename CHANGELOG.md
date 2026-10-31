@@ -6,6 +6,21 @@ follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-31
+
+### Changed
+
+- `--format json` is built from the family's generated types (grd ADR-003).
+  `src/generated/wire.rs` is written by grd's `codegen/generate.py`; `make
+  check` fails when it is stale, and `make codegen` regenerates it. A
+  diagnostic now leaves out an empty `help` or `note` instead of printing
+  `null`, because the family schema makes both optional (grd GRD-066).
+- `aigrd init --format json` prints `{"status": "created" | "exists", "path": …}`
+  instead of text. A second `init` over an existing `aigrd.toml` now exits 0
+  with `status: "exists"` and writes nothing; it used to exit 2. A failed
+  write exits 2 with the family error object (code `io.write`). This follows
+  ctxgrd ADR-086 (WIRE-001, WIRE-005, WIRE-007), and grd's family test checks it.
+
 ## [0.3.1] - 2026-09-29
 
 ### Fixed
